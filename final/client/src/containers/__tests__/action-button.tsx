@@ -3,6 +3,8 @@ import ActionButton from '../action-button';
 import { cartItemsVar } from '../../cache';
 import { shallow, configure } from 'enzyme';
 import Adapter from 'enzyme-adapter-react-16';
+import { MockedProvider } from '@apollo/client/testing';
+import { ApolloConsumer } from '@apollo/client';
 
 configure({ adapter: new Adapter() })
 
@@ -34,7 +36,16 @@ describe('action button', () => {
     cartItemsVar([]);
     // renderApollo(<ActionButton isBooked={true} />, { container });
     // getByText(/cancel this trip/i);
-    wrapper = shallow(<ActionButton isBooked={true}/>);
+    wrapper = shallow(
+      <MockedProvider>
+        <ApolloConsumer>
+          { client => {
+            client.stop = jest.fn();
+            return <ActionButton isBooked={true}/>
+          }}
+        </ApolloConsumer>
+      </MockedProvider>
+    );
     expect(wrapper.render().text().includes("Cancel This Trip")).toBe(true);
   });
 });
