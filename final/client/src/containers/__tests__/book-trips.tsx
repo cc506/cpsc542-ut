@@ -1,8 +1,10 @@
-import React from 'react';
-
+import { shallow, configure } from 'enzyme';
+import Adapter from 'enzyme-adapter-react-16';
 import { renderApollo, cleanup, fireEvent, waitFor } from '../../test-utils';
 import BookTrips, { BOOK_TRIPS } from '../book-trips';
 import { GET_LAUNCH } from '../cart-item';
+
+configure({ adapter: new Adapter() })
 
 const mockLaunch = {
   __typename: 'Launch',
@@ -23,8 +25,8 @@ describe('book trips', () => {
   afterEach(cleanup);
 
   it('renders without error', () => {
-    const { getByTestId } = renderApollo(<BookTrips cartItems={[]} />);
-    expect(getByTestId('book-button')).toBeTruthy();
+    const wrapper = shallow(<BookTrips cartItems={[]} />);
+    expect(wrapper.find({"data-testid": "book-button"})).toBeTruthy();
   });
 
   it('completes mutation and shows message', async () => {
