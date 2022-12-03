@@ -2,23 +2,29 @@ import React from 'react';
 
 import { render, cleanup } from '../../test-utils';
 import LaunchTile from '../launch-tile';
-import { renderApollo } from '../../test-utils';
+import { configure, shallow } from 'enzyme';
+import Adapter from 'enzyme-adapter-react-16';
+
+configure({ adapter: new Adapter() })
 
 describe('Launch Tile', () => {
   // automatically unmount and cleanup DOM after the test is finished.
   afterEach(cleanup);
 
   it('renders without error', () => {
-    renderApollo(
-      <LaunchTile
-        launch={{
-          __typename: 'Launch',
-          isBooked: false,
-          id: '1',
-          mission: { name: 'the first one', __typename: 'Mission', missionPatch: null },
-          rocket: { name: 'harambe', __typename: 'Rocket', id: '1' },
-        }}
-      />,
-    );
+    // renderApollo(
+    //   <LaunchTile
+    //     launch={{
+    //       __typename: 'Launch',
+    //       isBooked: false,
+    //       id: '1',
+    //       mission: { name: 'the first one', __typename: 'Mission', missionPatch: null },
+    //       rocket: { name: 'harambe', __typename: 'Rocket', id: '1' },
+    //     }}
+    //   />,
+    // );
+
+    let wrapper = shallow(<LaunchTile></LaunchTile>)
+    expect(wrapper.exists())
   });
 });

@@ -1,7 +1,11 @@
-import React from 'react';
-
+import { ApolloConsumer } from '@apollo/client';
+import { MockedProvider } from '@apollo/client/testing';
+import { configure, mount } from 'enzyme';
+import Adapter from 'enzyme-adapter-react-16';
 import { renderApollo, cleanup, waitFor } from '../../test-utils';
 import Profile, { GET_MY_TRIPS } from '../profile';
+
+configure({ adapter: new Adapter() })
 
 const mockLaunch = {
   __typename: 'Launch',
@@ -39,9 +43,21 @@ describe('Profile Page', () => {
       },
     ];
 
-    const { getByText } = renderApollo(<Profile />, { mocks });
+    //const { getByText } = renderApollo(<Profile />, { mocks });
+
+    let wrapper = mount(<MockedProvider mocks={mocks}>
+      <ApolloConsumer>
+        {
+          client => {
+            client.stop = jest.fn()
+            return <Profile></Profile>
+          }
+        }
+      </ApolloConsumer>
+    </MockedProvider>)
 
     // if the profile renders, it will have the list of missions booked
-    await waitFor(() => getByText(/test mission/i));
+    //await waitFor(() => getByText(/test mission/i));
+    await waitFor( () => expect(wrapper.render().text().includes(`${/test mission/i}`)).toBe(true));
   });
 });

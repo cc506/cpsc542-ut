@@ -1,3 +1,5 @@
+import { ApolloConsumer } from '@apollo/client';
+import { MockedProvider } from '@apollo/client/testing';
 import { shallow, configure } from 'enzyme';
 import Adapter from 'enzyme-adapter-react-16';
 import { renderApollo, cleanup, fireEvent, waitFor } from '../../test-utils';
@@ -25,8 +27,8 @@ describe('book trips', () => {
   afterEach(cleanup);
 
   it('renders without error', () => {
-    const wrapper = shallow(<BookTrips cartItems={[]} />);
-    expect(wrapper.find({"data-testid": "book-button"})).toBeTruthy();
+    const wrapper = renderApollo(<BookTrips cartItems={[]} />);
+    expect(wrapper.getByTestId('book-button')).toBeTruthy();
   });
 
   it('completes mutation and shows message', async () => {
@@ -45,15 +47,30 @@ describe('book trips', () => {
         result: { data: { launch: mockLaunch } },
       },
     ];
-    const { getByTestId } = renderApollo(<BookTrips cartItems={['1']} />, { mocks, addTypename: false });
+    //const { getByTestId } = renderApollo(<BookTrips cartItems={['1']} />, { mocks, addTypename: false });
 
-    fireEvent.click(getByTestId('book-button'));
+    let wrapper = shallow(
+      <MockedProvider mocks={mocks} addTypename={false}>
+        <ApolloConsumer>
+          {
+            client => {
+              client.stop = jest.fn();
+              return <BookTrips cartItems={['1']} />
+            }
+          }
+        </ApolloConsumer>
+      </MockedProvider>
+    )
+
+    //fireEvent.click(getByTestId('book-button'));
+    wrapper.find({"data-testid": "book-button"}).simulate('click')
 
     // Let's wait until our mocked mutation resolves and
     // the component re-renders.
     // getByTestId throws an error if it cannot find an element with the given ID
     // and waitFor will wait until the callback doesn't throw an error
-    await waitFor(() => getByTestId('message'));
+    //await waitFor(() => getByTestId('message'));
+    await waitFor(() =>  expect(wrapper.find({ "data-testid": "message" })).toBeTruthy());
   });
 
   // >>>> TODO

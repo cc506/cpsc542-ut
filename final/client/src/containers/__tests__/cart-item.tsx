@@ -1,7 +1,11 @@
-import React from 'react';
-
+import { ApolloConsumer } from '@apollo/client';
+import { MockedProvider } from '@apollo/client/testing';
+import { shallow, configure, mount } from 'enzyme';
+import Adapter from 'enzyme-adapter-react-16';
 import { renderApollo, cleanup, waitFor } from '../../test-utils';
 import CartItem, { GET_LAUNCH } from '../cart-item';
+
+configure({ adapter: new Adapter() })
 
 const mockLaunch = {
   __typename: 'Launch',
@@ -37,9 +41,23 @@ describe('cart item', () => {
     });
 
     // check the loading state
-    getByText(/loading/i);
+    //getByText(/loading/i);
+    let wrapper = shallow(
+      <MockedProvider mocks={mocks} addTypename={false}>
+        <ApolloConsumer>
+          {
+            client => {
+              client.stop = jest.fn();
+              return <CartItem launchId={'1'} />
+            }
+          }
+        </ApolloConsumer>
+      </MockedProvider>
+    )
+    expect(wrapper.render().text().includes(`${/loading/i}`))
 
-    return waitFor(() => getByText(/test mission/i));
+    //return waitFor(() => getByText(/test mission/i));
+    return waitFor(() => expect(wrapper.render().text().includes(`${/test mission/i}`)))
   });
 
   it('renders with error state', () => {
@@ -57,6 +75,20 @@ describe('cart item', () => {
       addTypename: false,
     });
 
-    waitFor(() => getByText(/aw shucks/i));
+    let wrapper = mount(
+      <MockedProvider mocks={mocks}>
+        <ApolloConsumer>
+          {
+            client =>{
+              client.stop = jest.fn();
+              return <CartItem launchId={'1'} />
+            }
+          }
+        </ApolloConsumer>
+      </MockedProvider>
+    )
+
+    //waitFor(() => getByText(/aw shucks/i));
+    waitFor(() => expect(wrapper.render().text().includes(`${/aw shucks/i}`)));
   });
 });

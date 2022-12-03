@@ -23,14 +23,14 @@ describe('action button', () => {
     // const { getByText, container } = renderApollo(<ActionButton />);
     // getByText(/add to cart/i);
     let wrapper = shallow(<ActionButton />);
-    expect(wrapper.render().text().includes("Add to Cart")).toBe(true);
+    expect(wrapper.render().text().includes(`${/add to cart/i}`)).toBe(true);
 
     // rerender with different props to same container
     waitFor(() => cartItemsVar(['1']));
     // renderApollo(<ActionButton id="1" />, { container });
     // getByText(/remove from cart/i);
     wrapper = shallow(<ActionButton id="1"/>);
-    expect(wrapper.render().text().includes("Remove from Cart")).toBe(true);
+    expect(wrapper.render().text().includes(`${/remove from cart/i}`)).toBe(true);
     
     // rerender with different props to same container
     cartItemsVar([]);
@@ -46,6 +46,6 @@ describe('action button', () => {
         </ApolloConsumer>
       </MockedProvider>
     );
-    expect(wrapper.render().text().includes("Cancel This Trip")).toBe(true);
+    expect(wrapper.render().text().includes(`${/cancel this trip/i}`)).toBe(true);
   });
 });

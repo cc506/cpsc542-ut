@@ -1,8 +1,13 @@
 import React from 'react';
-import { InMemoryCache } from '@apollo/client';
+import { ApolloConsumer, InMemoryCache } from '@apollo/client';
 
 import { renderApollo, cleanup, waitFor } from '../../test-utils';
 import Launches, { GET_LAUNCHES } from '../launches';
+import { configure, mount } from 'enzyme';
+import Adapter from 'enzyme-adapter-react-16';
+import { MockedProvider } from '@apollo/client/testing';
+
+configure({ adapter: new Adapter() })
 
 const mockLaunch = {
   __typename: 'Launch',
@@ -48,6 +53,19 @@ describe('Launches Page', () => {
       mocks,
       cache,
     });
-    await waitFor(() => getByText(/test mission/i));
+
+    let wrapper = mount(<MockedProvider mocks={mocks} cache={cache}>
+      <ApolloConsumer>
+        {
+          client => {
+            client.stop = jest.fn()
+            return <Launches/> 
+          }
+        }
+      </ApolloConsumer>
+    </MockedProvider>)
+
+    //await waitFor(() => getByText(/test mission/i));
+    await waitFor( () => expect(wrapper.render().text().includes(`${/test mission/i}`)).toBe(true));
   });
 });

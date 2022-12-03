@@ -4,6 +4,12 @@ import { renderApollo, cleanup, waitFor } from '../../test-utils';
 import Launch, { GET_LAUNCH_DETAILS } from '../launch';
 import { Route, Routes } from 'react-router-dom';
 import { createMemoryHistory } from 'history';
+import { configure, mount } from 'enzyme';
+import { MockedProvider } from '@apollo/client/testing';
+import { ApolloConsumer } from '@apollo/client';
+import Adapter from 'enzyme-adapter-react-16';
+
+configure({ adapter: new Adapter() })
 
 const mockLaunch = {
   __typename: 'Launch',
@@ -39,17 +45,31 @@ describe('Launch Page', () => {
 
     const history = ['/launch/1'];
 
-    const { getByText } = await renderApollo(
-      <Routes>
-        <Route path="launch/:launchId" element={<Launch />} />
-      </Routes>,
-      {
-        mocks,
-        history,
-        resolvers: {},
-      },
-    );
+    // const { getByText } = await renderApollo(
+    //   <Routes>
+    //     <Route path="launch/:launchId" element={<Launch />} />
+    //   </Routes>,
+    //   {
+    //     mocks,
+    //     history,
+    //     resolvers: {},
+    //   },
+    // );
 
-    await waitFor(() => getByText(/test mission/i));
+    let wrapper = mount(<MockedProvider mocks={mocks} resolvers={{}}>
+      <ApolloConsumer>
+        {
+          client => {
+            client.stop = jest.fn()
+            return (<Route>
+                      <Route path="launch/:launchId" element={<Launch />} />
+                    </Route>)
+          }
+        }
+      </ApolloConsumer>
+    </MockedProvider>)
+
+    //await waitFor(() => getByText(/test mission/i));
+    await waitFor( () => expect(wrapper.render().text().includes(`${/test mission/i}`)).toBe(true));
   });
 });
