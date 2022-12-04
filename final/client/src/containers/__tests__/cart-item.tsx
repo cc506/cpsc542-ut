@@ -70,10 +70,10 @@ describe('cart item', () => {
 
     // since we know the error message, we can use getByText
     // to recognize the error
-    const { getByText } = renderApollo(<CartItem launchId={'1'} />, {
-      mocks,
-      addTypename: false,
-    });
+    // const { getByText } = renderApollo(<CartItem launchId={'1'} />, {
+    //   mocks,
+    //   addTypename: false,
+    // });
 
     let wrapper = mount(
       <MockedProvider mocks={mocks}>

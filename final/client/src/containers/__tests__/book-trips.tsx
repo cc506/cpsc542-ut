@@ -63,7 +63,7 @@ describe('book trips', () => {
     )
 
     //fireEvent.click(getByTestId('book-button'));
-    wrapper.find('.css-wwcn44').simulate('click');
+    wrapper.find({"data-testid": "book-button"}).simulate('click');
 
     wrapper.update();
 

@@ -4,3 +4,4 @@ node_modules
 .idea/
 final/client/package-lock.json
 final/server/store.sqlite
+final/server/package-lock.json

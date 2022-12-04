@@ -29,6 +29,6 @@ describe('Page Container', () => {
 
   it('finds rendered container element', () => {
     let wrapper = shallow(<PageContainer props={"prop"}/>);
-    expect(wrapper.find("container")).toBeTruthy();
+    expect(wrapper.find("Container")).toBeTruthy();
   });
 });

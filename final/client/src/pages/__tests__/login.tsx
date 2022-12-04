@@ -54,12 +54,14 @@ describe('Login Page', () => {
     // fireEvent.change(getByTestId('login-input'), {
     //   target: { value: 'a@a.a' },
     // });
-    wrapper.find('.css-wotvke').simulate('change', {target: { value: 'a@a.a' }})
+    wrapper.find({"data-testid": "login-input"}).simulate('change', {target: { value: 'a@a.a' }})
 
     // fireEvent.click(getByText(/log in/i));
+    wrapper.find('log in').simulate('click');
 
     // login is done if loader is gone
     // await waitFor(() => getByText(/log in/i));
+    await waitFor(() => expect(wrapper.find('log in')));
 
     expect(isLoggedInVar()).toBeTruthy();
   });
