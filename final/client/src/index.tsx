@@ -1,5 +1,5 @@
 import React from 'react';
-import ReactDOM from 'react-dom/client';
+import { createRoot } from 'react-dom/client';
 import { ApolloClient, NormalizedCacheObject, ApolloProvider, gql, useQuery } from '@apollo/client';
 
 import Pages from './pages';
@@ -52,7 +52,7 @@ function IsLoggedIn() {
 // Find our rootElement or throw and error if it doesn't exist
 const rootElement = document.getElementById('root');
 if (!rootElement) throw new Error('Failed to find the root element');
-const root = ReactDOM.createRoot(rootElement);
+const root = createRoot(rootElement);
 
 injectStyles();
 

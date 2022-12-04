@@ -3,6 +3,12 @@ import React from 'react';
 import { renderApollo, cleanup, fireEvent, waitFor } from '../../test-utils';
 import Login, { LOGIN_USER } from '../login';
 import { cache, isLoggedInVar } from '../../cache';
+import { MockedProvider } from '@apollo/client/testing';
+import { ApolloConsumer } from '@apollo/client';
+import { configure, shallow } from 'enzyme';
+import Adapter from '@cfaester/enzyme-adapter-react-18';
+
+configure({ adapter: new Adapter() })
 
 describe('Login Page', () => {
   // automatically unmount and cleanup DOM after the test is finished.
@@ -29,19 +35,31 @@ describe('Login Page', () => {
       },
     ];
 
-    const { getByText, getByTestId } = await renderApollo(<Login />, {
-      mocks,
-      cache,
-    });
+    // const { getByText, getByTestId } = await renderApollo(<Login />, {
+    //   mocks,
+    //   cache,
+    // });
 
-    fireEvent.change(getByTestId('login-input'), {
-      target: { value: 'a@a.a' },
-    });
+    let wrapper = shallow(<MockedProvider mocks={mocks} cache={cache}>
+      <ApolloConsumer>
+        {
+          client => {
+            client.stop = jest.fn()
+            return <Login />
+          }
+        }
+      </ApolloConsumer>
+    </MockedProvider>)
 
-    fireEvent.click(getByText(/log in/i));
+    // fireEvent.change(getByTestId('login-input'), {
+    //   target: { value: 'a@a.a' },
+    // });
+    wrapper.find('.css-wotvke').simulate('change', {target: { value: 'a@a.a' }})
+
+    // fireEvent.click(getByText(/log in/i));
 
     // login is done if loader is gone
-    await waitFor(() => getByText(/log in/i));
+    // await waitFor(() => getByText(/log in/i));
 
     expect(isLoggedInVar()).toBeTruthy();
   });

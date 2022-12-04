@@ -1,7 +1,7 @@
 import { ApolloConsumer } from '@apollo/client';
 import { MockedProvider } from '@apollo/client/testing';
 import { shallow, configure } from 'enzyme';
-import Adapter from 'enzyme-adapter-react-16';
+import Adapter from '@cfaester/enzyme-adapter-react-18';
 import { renderApollo, cleanup, fireEvent, waitFor } from '../../test-utils';
 import BookTrips, { BOOK_TRIPS } from '../book-trips';
 import { GET_LAUNCH } from '../cart-item';
@@ -28,7 +28,7 @@ describe('book trips', () => {
 
   it('renders without error', () => {
     const wrapper = renderApollo(<BookTrips cartItems={[]} />);
-    expect(wrapper.getByTestId('book-button')).toBeTruthy();
+    expect(wrapper.find({"data-testid": "book-button"})).toBeTruthy();
   });
 
   it('completes mutation and shows message', async () => {
@@ -63,7 +63,9 @@ describe('book trips', () => {
     )
 
     //fireEvent.click(getByTestId('book-button'));
-    wrapper.find({"data-testid": "book-button"}).simulate('click')
+    wrapper.find('.css-wwcn44').simulate('click');
+
+    wrapper.update();
 
     // Let's wait until our mocked mutation resolves and
     // the component re-renders.

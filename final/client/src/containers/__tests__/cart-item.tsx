@@ -1,7 +1,7 @@
 import { ApolloConsumer } from '@apollo/client';
 import { MockedProvider } from '@apollo/client/testing';
 import { shallow, configure, mount } from 'enzyme';
-import Adapter from 'enzyme-adapter-react-16';
+import Adapter from '@cfaester/enzyme-adapter-react-18';
 import { renderApollo, cleanup, waitFor } from '../../test-utils';
 import CartItem, { GET_LAUNCH } from '../cart-item';
 
@@ -35,10 +35,10 @@ describe('cart item', () => {
 
     // since we know the name of the mission, and know that name
     // will be rendered at some point, we can use getByText
-    const { getByText } = renderApollo(<CartItem launchId={'1'} />, {
-      mocks,
-      addTypename: false,
-    });
+    // const { getByText } = renderApollo(<CartItem launchId={'1'} />, {
+    //   mocks,
+    //   addTypename: false,
+    // });
 
     // check the loading state
     //getByText(/loading/i);
@@ -54,10 +54,10 @@ describe('cart item', () => {
         </ApolloConsumer>
       </MockedProvider>
     )
-    expect(wrapper.render().text().includes(`${/loading/i}`))
+    expect(wrapper.find(`loading`))
 
     //return waitFor(() => getByText(/test mission/i));
-    return waitFor(() => expect(wrapper.render().text().includes(`${/test mission/i}`)))
+    return waitFor(() => expect(wrapper.find(`test mission`)))
   });
 
   it('renders with error state', () => {

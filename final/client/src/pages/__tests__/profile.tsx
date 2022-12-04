@@ -1,9 +1,10 @@
 import { ApolloConsumer } from '@apollo/client';
 import { MockedProvider } from '@apollo/client/testing';
 import { configure, mount } from 'enzyme';
-import Adapter from 'enzyme-adapter-react-16';
+import Adapter from '@cfaester/enzyme-adapter-react-18';
 import { renderApollo, cleanup, waitFor } from '../../test-utils';
 import Profile, { GET_MY_TRIPS } from '../profile';
+import { BrowserRouter } from 'react-router-dom';
 
 configure({ adapter: new Adapter() })
 
@@ -50,7 +51,7 @@ describe('Profile Page', () => {
         {
           client => {
             client.stop = jest.fn()
-            return <Profile></Profile>
+            return (<BrowserRouter><Profile /></BrowserRouter>)
           }
         }
       </ApolloConsumer>
@@ -58,6 +59,6 @@ describe('Profile Page', () => {
 
     // if the profile renders, it will have the list of missions booked
     //await waitFor(() => getByText(/test mission/i));
-    await waitFor( () => expect(wrapper.render().text().includes(`${/test mission/i}`)).toBe(true));
+    await waitFor( () => expect(wrapper.find(`test mission`)).toBeTruthy());
   });
 });
