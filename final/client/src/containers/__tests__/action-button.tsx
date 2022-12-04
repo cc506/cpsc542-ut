@@ -2,7 +2,7 @@ import { renderApollo, cleanup, waitFor } from '../../test-utils';
 import ActionButton from '../action-button';
 import { cartItemsVar } from '../../cache';
 import { shallow, configure } from 'enzyme';
-import Adapter from 'enzyme-adapter-react-16';
+import Adapter from '@cfaester/enzyme-adapter-react-18';
 import { MockedProvider } from '@apollo/client/testing';
 import { ApolloConsumer } from '@apollo/client';
 
@@ -23,14 +23,14 @@ describe('action button', () => {
     // const { getByText, container } = renderApollo(<ActionButton />);
     // getByText(/add to cart/i);
     let wrapper = shallow(<ActionButton />);
-    expect(wrapper.render().text().includes(`${/add to cart/i}`)).toBe(true);
+    expect(wrapper.find(`add to cart`)).toBeTruthy();
 
     // rerender with different props to same container
     waitFor(() => cartItemsVar(['1']));
     // renderApollo(<ActionButton id="1" />, { container });
     // getByText(/remove from cart/i);
     wrapper = shallow(<ActionButton id="1"/>);
-    expect(wrapper.render().text().includes(`${/remove from cart/i}`)).toBe(true);
+    expect(wrapper.find(`remove from cart`)).toBeTruthy()
     
     // rerender with different props to same container
     cartItemsVar([]);
@@ -46,6 +46,6 @@ describe('action button', () => {
         </ApolloConsumer>
       </MockedProvider>
     );
-    expect(wrapper.render().text().includes(`${/cancel this trip/i}`)).toBe(true);
+    expect(wrapper.find(`cancel this trip`)).toBeTruthy()
   });
 });

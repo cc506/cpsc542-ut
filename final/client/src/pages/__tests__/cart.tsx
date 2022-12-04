@@ -6,7 +6,7 @@ import { GET_LAUNCH } from '../../containers/cart-item';
 import { cache, cartItemsVar } from '../../cache';
 import { MockedProvider } from '@apollo/client/testing';
 import { mount, configure } from 'enzyme';
-import Adapter from 'enzyme-adapter-react-16';
+import Adapter from '@cfaester/enzyme-adapter-react-18';
 import { ApolloConsumer } from '@apollo/client';
 
 configure({ adapter: new Adapter() })

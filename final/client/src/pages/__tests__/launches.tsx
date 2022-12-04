@@ -4,8 +4,9 @@ import { ApolloConsumer, InMemoryCache } from '@apollo/client';
 import { renderApollo, cleanup, waitFor } from '../../test-utils';
 import Launches, { GET_LAUNCHES } from '../launches';
 import { configure, mount } from 'enzyme';
-import Adapter from 'enzyme-adapter-react-16';
+import Adapter from '@cfaester/enzyme-adapter-react-18';
 import { MockedProvider } from '@apollo/client/testing';
+import { BrowserRouter } from 'react-router-dom';
 
 configure({ adapter: new Adapter() })
 
@@ -49,23 +50,23 @@ describe('Launches Page', () => {
         },
       },
     ];
-    const { getByText } = await renderApollo(<Launches />, {
-      mocks,
-      cache,
-    });
+    // const { getByText } = await renderApollo(<Launches />, {
+    //   mocks,
+    //   cache,
+    // });
 
     let wrapper = mount(<MockedProvider mocks={mocks} cache={cache}>
       <ApolloConsumer>
         {
           client => {
             client.stop = jest.fn()
-            return <Launches/> 
+            return (<BrowserRouter><Launches /></BrowserRouter>)
           }
         }
       </ApolloConsumer>
     </MockedProvider>)
 
     //await waitFor(() => getByText(/test mission/i));
-    await waitFor( () => expect(wrapper.render().text().includes(`${/test mission/i}`)).toBe(true));
+    await waitFor( () => expect(wrapper.find(`test mission`)).toBeTruthy());
   });
 });

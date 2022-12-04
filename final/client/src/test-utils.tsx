@@ -4,6 +4,10 @@ import { render } from '@testing-library/react';
 import '@testing-library/jest-dom/extend-expect';
 import { MemoryRouter as Router } from 'react-router-dom';
 import { MockedProvider, MockedResponse } from '@apollo/client/testing';
+import { mount, configure } from 'enzyme';
+import Adapter from '@cfaester/enzyme-adapter-react-18';
+
+configure({ adapter: new Adapter()});
 
 type RenderApolloOptions = {
   mocks?: MockedResponse[];
@@ -16,7 +20,7 @@ type RenderApolloOptions = {
 };
 
 const renderApollo = (node: any, { mocks, addTypename, defaultOptions, cache, resolvers, history, ...options }: RenderApolloOptions = {}) => {
-  return render(
+  return mount(
     <Router initialEntries={history}>
       <MockedProvider mocks={mocks} addTypename={addTypename} defaultOptions={defaultOptions} cache={cache} resolvers={resolvers}>
         {node}

@@ -2,12 +2,12 @@ import React from 'react';
 
 import { renderApollo, cleanup, waitFor } from '../../test-utils';
 import Launch, { GET_LAUNCH_DETAILS } from '../launch';
-import { Route, Routes } from 'react-router-dom';
+import { BrowserRouter, Route, Routes } from 'react-router-dom';
 import { createMemoryHistory } from 'history';
 import { configure, mount } from 'enzyme';
 import { MockedProvider } from '@apollo/client/testing';
 import { ApolloConsumer } from '@apollo/client';
-import Adapter from 'enzyme-adapter-react-16';
+import Adapter from '@cfaester/enzyme-adapter-react-18';
 
 configure({ adapter: new Adapter() })
 
@@ -61,15 +61,17 @@ describe('Launch Page', () => {
         {
           client => {
             client.stop = jest.fn()
-            return (<Route>
-                      <Route path="launch/:launchId" element={<Launch />} />
-                    </Route>)
+            return (<BrowserRouter>
+                      <Routes>
+                        <Route path="launch/:launchId" element={<Launch />} />
+                      </Routes>  
+                    </BrowserRouter>)
           }
         }
       </ApolloConsumer>
     </MockedProvider>)
 
     //await waitFor(() => getByText(/test mission/i));
-    await waitFor( () => expect(wrapper.render().text().includes(`${/test mission/i}`)).toBe(true));
+    await waitFor( () => expect(wrapper.find(`test mission`)).toBeTruthy());
   });
 });

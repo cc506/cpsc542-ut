@@ -1,5 +1,5 @@
 import { configure, shallow } from 'enzyme';
-import Adapter from 'enzyme-adapter-react-16';
+import Adapter from '@cfaester/enzyme-adapter-react-18';
 import { render, cleanup } from '../../test-utils';
 import Button from '../button';
 
@@ -11,7 +11,7 @@ describe('Button', () => {
 
   it('renders without error', () => {
     //render(<Button>Hello World</Button>);
-    let wrapper = shallow(<Button></Button>)
+    let wrapper = shallow(<Button>Hello World</Button>)
     expect(wrapper.exists())
   });
 });

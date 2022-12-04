@@ -2,3 +2,5 @@ node_modules
 .DS_Store
 .env
 .idea/
+final/client/package-lock.json
+final/server/store.sqlite

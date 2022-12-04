@@ -4,7 +4,7 @@ import LogoutButton from '../logout-button';
 import { renderApollo, cleanup, fireEvent } from '../../test-utils';
 import { cache, isLoggedInVar } from '../../cache';
 import { shallow, configure, mount, render  } from 'enzyme';
-import Adapter from 'enzyme-adapter-react-16';
+import Adapter from '@cfaester/enzyme-adapter-react-18';
 import { MockedProvider } from '@apollo/client/testing';
 import { ApolloConsumer } from '@apollo/client';
 
@@ -16,13 +16,12 @@ describe('logout button', () => {
 
   it('renders logout button', async () => {
     //renderApollo(<LogoutButton />);
-
     let wrapper = mount(<MockedProvider>
       <ApolloConsumer>
         {
           client => {
             client.stop = jest.fn();
-            return <LogoutButton></LogoutButton>
+            return <LogoutButton/>
           }
         }
       </ApolloConsumer>
@@ -41,14 +40,14 @@ describe('logout button', () => {
         {
           client => {
             client.stop = jest.fn();
-            return <LogoutButton></LogoutButton>
+            return <LogoutButton/>
           }
         }
       </ApolloConsumer>
     </MockedProvider>)
 
     //fireEvent.click(getByTestId('logout-button'));
-    wrapper.find({"data-testid": "logout-button"}).simulate('click')
+    wrapper.find({"data-testid": "logout-button"}).first().simulate('click')
 
     expect(isLoggedInVar()).toBeFalsy();
     expect(localStorage.getItem('token')).toBeNull();
